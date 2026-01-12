@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Cart | VedaVault</title>
+<style>
+body{font-family:Arial;background:#fffbeb;padding:20px;}
+h2{color:#d97706;text-align:center;}
+.product-container{display:flex;flex-wrap:wrap;gap:20px;justify-content:center;}
+.card{background:#fff;padding:15px;border-radius:12px;box-shadow:0 6px 15px rgba(0,0,0,0.1);width:200px;text-align:center;}
+.card img{width:100%;height:150px;object-fit:cover;}
+button{padding:8px 12px;margin-top:10px;border:none;border-radius:8px;background:#d97706;color:#fff;cursor:pointer;}
+button:hover{background:#b45309;}
+</style>
+</head>
+<body>
+
+<h2>Your Cart</h2>
+<div class="product-container" id="product-container">Loading...</div>
+
+<script>
+const user = JSON.parse(localStorage.getItem("user"));
+if(!user) window.location.href="login.html";
+
+let cart = JSON.parse(localStorage.getItem("cart")) || [];
+const container = document.getElementById("product-container");
+
+function renderCart(){
+  container.innerHTML = "";
+  if(cart.length===0){ container.innerHTML = "<p>Your cart is empty!</p>"; return; }
+
+  cart.forEach(p=>{
+    const div = document.createElement("div");
+    div.className = "card";
+    div.innerHTML = `
+      <img src="${p.img}" alt="${p.name}">
+      <h3>${p.name}</h3>
+      <p>₹${p.price}</p>
+      <button onclick="pay(${p.id})">Pay & Remove</button>
+    `;
+    container.appendChild(div);
+  });
+}
+
+async function pay(productId){
+  const product = cart.find(p=>p.id===productId);
+  const confirmPayment = confirm(`Pay ₹${product.price} for ${product.name}?`);
+  if(!confirmPayment) return;
+
+  // send order to server
+  const res = await fetch("/orders",{
+    method:"POST",
+    headers:{"Content-Type":"application/json"},
+    body:JSON.stringify({user_id:user.id,total:product.price})
+  });
+  const data = await res.json();
+  alert(`Payment successful! Order ID: ${data.orderId}`);
+
+  // Remove from cart
+  cart = cart.filter(p=>p.id!==productId);
+  localStorage.setItem("cart", JSON.stringify(cart));
+  renderCart();
+
+  // Update product page cart count
+  if(window.opener) window.opener.updateCartCount?.();
+}
+
+renderCart();
+</script>
+
+</body>
+</html>

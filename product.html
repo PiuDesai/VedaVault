@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Products | VedaVault</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<style>
+*{margin:0;padding:0;box-sizing:border-box;}
+body{font-family:Arial, sans-serif; background:antiquewhite; color:#333; padding-top:90px;}
+header{position:fixed;top:0;width:100%; padding:15px 40px; background:rgba(255,255,255,0.95); display:flex;justify-content:space-between; z-index:1000;}
+header h2{color:#d97706;}
+nav a{margin-left:20px;text-decoration:none;color:#333;}
+nav a:hover{color:#d97706;}
+.products{display:flex; flex-wrap:wrap; gap:30px; justify-content:center; padding:40px 20px;}
+.card{width:260px; background:#fff; border-radius:20px; box-shadow:0 10px 25px rgba(0,0,0,0.12); text-align:center; overflow:hidden;}
+.card img{width:100%; height:180px; object-fit:cover;}
+.card h3{color:#d97706; margin:15px 0 5px;}
+.card p{margin-bottom:15px;}
+.card button{background:#d97706; color:#fff; border:none; padding:10px 18px; margin-bottom:20px; border-radius:10px; cursor:pointer;}
+.card button:disabled{background:#ccc; cursor:not-allowed;}
+.card button:hover:not(:disabled){background:#b45309;}
+#cart-count{background:#d97706; color:#fff; border-radius:50%; padding:3px 8px; font-size:12px; margin-left:5px;}
+</style>
+</head>
+<body>
+
+<header>
+  <h2>VedaVault</h2>
+  <nav>
+    <a href="cart.html">Cart <span id="cart-count">0</span></a>
+  </nav>
+</header>
+
+<h2 style="text-align:center;margin:30px 0;">Our Products</h2>
+
+<section class="products" id="products-list">
+  <!-- Products will be added dynamically -->
+</section>
+
+<script>
+let cart = JSON.parse(localStorage.getItem("cart")) || [];
+function updateCartCount(){ document.getElementById("cart-count").textContent = cart.length; }
+updateCartCount();
+
+// --- Load products ---
+async function loadProducts(){
+  const res = await fetch("/admin/products");
+  const products = await res.json();
+  const productsList = document.getElementById("products-list");
+  productsList.innerHTML = "";
+
+  products.forEach(product => {
+    const card = document.createElement("div");
+    card.classList.add("card");
+
+    const imgSrc = product.img ? `/${product.img}` : "img/default.jpg";
+
+    // Disable button if product already in cart
+    const inCart = cart.find(p => p.id === product.id);
+    const btnDisabled = inCart ? "disabled" : "";
+
+    card.innerHTML = `
+      <img src="${imgSrc}" alt="${product.name}">
+      <h3>${product.name}</h3>
+      <p>₹${product.price}</p>
+      <button onclick="addToCart(${product.id})" ${btnDisabled}>Add to Cart</button>
+    `;
+    productsList.appendChild(card);
+  });
+}
+
+// --- Add product to cart ---
+function addToCart(id){
+  const user = JSON.parse(localStorage.getItem("user"));
+  if(!user){
+    localStorage.setItem("pendingProduct", id);
+    alert("Please login to continue!");
+    window.location.href="login.html";
+    return;
+  }
+
+  const card = Array.from(document.getElementById("products-list").children)
+    .find(c=>c.querySelector("button").getAttribute("onclick")===`addToCart(${id})`);
+
+  const product = {
+    id,
+    name: card.querySelector("h3").textContent,
+    price: parseInt(card.querySelector("p").textContent.replace("₹","")),
+    img: card.querySelector("img").getAttribute("src")
+  };
+
+  cart.push(product);
+  localStorage.setItem("cart", JSON.stringify(cart));
+  updateCartCount();
+  card.querySelector("button").disabled = true; // disable button
+  alert(`${product.name} added to cart!`);
+}
+
+// --- Handle pending product after login ---
+window.addEventListener("load", ()=>{
+  loadProducts();
+  const user = JSON.parse(localStorage.getItem("user"));
+  const pendingId = localStorage.getItem("pendingProduct");
+  if(user && pendingId){
+    addToCart(parseInt(pendingId));
+    localStorage.removeItem("pendingProduct");
+  }
+});
+</script>
+
+</body>
+</html>

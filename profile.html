@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Profile | VedaVault</title>
+<style>
+body{font-family:Arial;background:#fffbeb;padding:20px;}
+h2,h3{color:#d97706;}
+.profile-box, .orders-box, .subscription-box{
+  max-width:600px;margin:20px auto;background:#fff;padding:20px;border-radius:15px;box-shadow:0 10px 25px rgba(0,0,0,0.15);
+}
+.order-item{border-bottom:1px solid #ddd;padding:10px 0;}
+button{padding:10px 15px;margin-top:10px;border:none;border-radius:8px;background:#d97706;color:#fff;cursor:pointer;}
+button:hover{background:#b45309;}
+</style>
+</head>
+<body>
+
+<h2>Your Profile</h2>
+<div class="profile-box">
+  <p>Name: <span id="profile-name"></span></p>
+  <p>Email: <span id="profile-email"></span></p>
+  <p>Phone: <span id="profile-phone"></span></p>
+  <p>Address: <span id="profile-address"></span></p>
+  <button onclick="logout()">Logout</button>
+</div>
+
+<h3>Your Subscription</h3>
+<div class="subscription-box" id="subscription-info">Loading...</div>
+
+<h3>Your Orders</h3>
+<div class="orders-box" id="orders-list">Loading...</div>
+
+<script>
+const user = JSON.parse(localStorage.getItem("user"));
+if(!user) window.location.href = "login.html";
+
+// Fetch profile
+fetch(`/profile/${user.id}`)
+  .then(res => res.json())
+  .then(profile => {
+    document.getElementById("profile-name").textContent = profile.name;
+    document.getElementById("profile-phone").textContent = profile.phone;
+    document.getElementById("profile-address").textContent = profile.address;
+    document.getElementById("profile-email").textContent = user.email;
+  });
+
+// Fetch subscriptions
+fetch(`/subscriptions/${user.id}`)
+  .then(res => res.json())
+  .then(sub => {
+    const subBox = document.getElementById("subscription-info");
+    if(sub.length === 0) subBox.textContent = "No active subscription";
+    else subBox.textContent = `${sub[0].plan} - ${sub[0].status}`;
+  });
+
+// Fetch orders
+fetch(`/orders/${user.id}`)
+  .then(res => res.json())
+  .then(orders => {
+    const container = document.getElementById("orders-list");
+    container.innerHTML = "";
+    if(orders.length === 0){
+      container.textContent = "No orders yet.";
+    } else {
+      orders.forEach(order => {
+        const div = document.createElement("div");
+        div.classList.add("order-item");
+        div.innerHTML = `
+          <p>Order ID: ${order.id} | Total: ₹${order.total} | Status: ${order.status} | Date: ${order.order_date}</p>
+        `;
+        container.appendChild(div);
+      });
+    }
+  });
+
+// Logout
+function logout(){
+  localStorage.removeItem("user");
+  window.location.href="login.html";
+}
+</script>
+
+</body>
+</html>

@@ -1,0 +1,542 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>VedaVault</title>
+
+<style>
+*{
+  margin:0;
+  padding:0;
+  box-sizing:border-box;
+}
+
+body{
+  font-family: Arial, sans-serif;
+  background:antiquewhite;
+  color:#333;
+  overflow-x:hidden;
+}
+
+/* ================= HEADER ================= */
+header{
+  position:fixed;
+  top:0;
+  width:100%;
+  padding:15px 40px;
+  background:rgba(255,255,255,0.9);
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  z-index:1000;
+  animation: slideDown 1s ease;
+}
+
+@keyframes slideDown{
+  from{transform:translateY(-100%);}
+  to{transform:translateY(0);}
+}
+
+header h2{
+  color:#d97706;
+  margin-top: 20px;
+}
+
+nav a{
+  margin-left:20px;
+  text-decoration:none;
+  color:#333;
+  font-weight:500;
+  position:relative;
+}
+
+nav a::after{
+  content:"";
+  position:absolute;
+  width:0;
+  height:2px;
+  background:#d97706;
+  bottom:-4px;
+  left:0;
+  transition:0.3s;
+}
+
+nav a:hover::after{
+  width:100%;
+}
+
+/* ================= HERO ================= */
+.hero{
+  position:relative;
+  height:70vh;
+  background:url("img/half_bg2.png") center/cover no-repeat;
+  text-align:center;
+  color:#fff;
+  padding-top:150px;
+  overflow:hidden;
+}
+
+/* glow animation */
+.hero::before{
+  content:"";
+  position:absolute;
+  inset:0;
+  background:radial-gradient(circle at center,
+    rgba(255,215,0,0.35),
+    transparent 70%);
+  animation:pulse 6s infinite alternate;
+}
+
+@keyframes pulse{
+  from{opacity:0.4;}
+  to{opacity:0.8;}
+}
+
+/* curve */
+.hero::after{
+  content:"";
+  position:absolute;
+  bottom:-1px;
+  left:0;
+  width:100%;
+  height:140px;
+  background:#fff;
+  border-top-left-radius:100% 100%;
+  border-top-right-radius:100% 100%;
+}
+
+.hero h2{
+  font-size:44px;
+  animation:fadeUp 1.5s ease;
+}
+
+.hero p{
+  margin-top:12px;
+  font-size:20px;
+  animation:fadeUp 2s ease;
+}
+
+@keyframes fadeUp{
+  from{opacity:0; transform:translateY(30px);}
+  to{opacity:1; transform:translateY(0);}
+}
+
+/* ================= FEATURE CARDS ================= */
+.features{
+  display:flex;
+  gap:30px;
+  justify-content:center;
+  flex-wrap:wrap;
+  padding: 50px;
+  margin: 10px;
+  border-radius: 20px;
+}
+
+.feature-card{
+  width:280px;
+  background:#fff;
+  border-radius:20px;
+  overflow:hidden;
+  text-align:center;
+  box-shadow:0 10px 25px rgba(0,0,0,0.12);
+  transition:0.4s;
+}
+
+/* IMAGE CONTAINER */
+.img-box{
+  width:100%;
+  height:180px;
+  overflow:hidden;
+}
+
+.feature-card img{
+  width:100%;
+  height:100%;
+  object-fit:cover;
+  transition:0.6s;
+}
+
+/* HOVER EFFECT */
+.feature-card:hover img{
+  transform:scale(1.1);
+}
+
+.feature-card h3{
+  margin-top:15px;
+  color:#d97706;
+}
+
+.feature-card p{
+  padding:0 20px 25px;
+  font-size:15px;
+  color:#555;
+}
+
+.feature-card:hover{
+  transform:translateY(-10px);
+}
+
+
+
+/* ================= ABOUT ================= */
+.about{
+  background:#fff7ed;
+  padding:90px 20px;
+  text-align:center;
+}
+
+.about h2{
+  color:#d97706;
+  margin-bottom:15px;
+  animation:fadeUp 1.2s ease;
+}
+
+.about p{
+  max-width:700px;
+  margin:auto;
+  font-size:18px;
+}
+
+/* ================= BIG CARDS ================= */
+.big-section{
+  display:flex;
+  flex-wrap:wrap;
+  gap:40px;
+  justify-content:center;
+  padding:90px 20px;
+}
+
+.big-card{
+  display:flex;
+  width:620px;
+  background:#fff;
+  border-radius:25px;
+  overflow:hidden;
+  box-shadow:0 15px 35px rgba(0,0,0,0.15);
+  animation:slideIn 1.5s ease;
+}
+
+@keyframes slideIn{
+  from{opacity:0; transform:translateX(-50px);}
+  to{opacity:1; transform:translateX(0);}
+}
+
+.big-card img{
+  width:50%;
+  object-fit:cover;
+  transition:0.5s;
+}
+
+.big-card:hover img{
+  transform:scale(1.1);
+}
+
+.big-card div{
+  padding:30px;
+}
+
+/* ================= FOOTER ================= */
+footer{
+  background:#111;
+  color:#fff;
+  padding:60px 20px;
+  text-align:center;
+}
+
+footer h3{
+  animation:fadeUp 1s ease;
+}
+
+footer p{
+  color:#aaa;
+  margin-top:10px;
+}
+
+
+/*======================Feedback Section=========================*/
+/* ================= FEEDBACK SECTION ================= */
+.feedback-section{
+  background:#fffbeb;
+  padding:50px 20px;
+  text-align:center;
+}
+
+.feedback-section h2{
+  color:#92400e;
+  margin-bottom:10px;
+}
+
+.feedback-section p{
+  margin-bottom:25px;
+  font-size:15px;
+}
+
+.feedback-form{
+  max-width:450px;
+  margin:auto;
+  background:#fff;
+  padding:25px;
+  border-radius:16px;
+  box-shadow:0 10px 25px rgba(0,0,0,0.15);
+}
+
+.feedback-form input,
+.feedback-form select,
+.feedback-form textarea{
+  width:100%;
+  padding:10px;
+  margin-bottom:15px;
+  border-radius:8px;
+  border:1px solid #ddd;
+  font-size:14px;
+}
+
+.feedback-form button{
+  background:#d97706;
+  color:#fff;
+  border:none;
+  padding:12px;
+  width:100%;
+  border-radius:10px;
+  font-size:16px;
+  cursor:pointer;
+}
+
+.feedback-form button:hover{
+  background:#b45309;
+}
+
+/* ================= CHATBOT ================= */
+/* CHATBOT FLOATING WIDGET */
+#chatbot-container {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  width: 320px;
+  font-family: Arial, sans-serif;
+  z-index: 9999;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 8px 25px rgba(0,0,0,0.2);
+  background: #fff;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Header */
+#chat-header {
+  background: #d97706;
+  color: #fff;
+  padding: 10px 15px;
+  font-weight: bold;
+  cursor: pointer;
+  text-align: center;
+}
+
+/* Chat body */
+#chat-body {
+  display: flex;
+  flex-direction: column;
+  height: 400px;
+}
+
+/* Chat messages */
+#chat-box {
+  flex: 1;
+  overflow-y: auto;
+  padding: 10px;
+  border-bottom: 1px solid #ddd;
+  background: #f9f9f9;
+}
+
+/* Form */
+#chat-form {
+  display: flex;
+  padding: 10px;
+  gap: 10px;
+}
+
+#chat-input {
+  flex: 1;
+  padding: 8px;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+}
+
+#chat-form button {
+  padding: 8px 12px;
+  background: #d97706;
+  color: #fff;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+#chat-form button:hover {
+  background: #b45309;
+}
+
+/* Messages */
+.message {
+  margin: 5px 0;
+  padding: 8px 12px;
+  border-radius: 12px;
+  line-height: 1.5;
+  max-width: 80%;
+  white-space: pre-wrap;
+}
+
+/* User messages */
+.user {
+  background-color: #d0e7ff;
+  text-align: right;
+  margin-left: auto;
+}
+
+/* AI messages */
+.ai {
+  background-color: #e0f7d8;
+  text-align: left;
+  margin-right: auto;
+}
+
+/* Typing indicator */
+#typing {
+  font-style: italic;
+  color: #555;
+}
+
+
+</style>
+</head>
+
+
+<body>
+
+<header>
+  <h2>VedaVault</h2>
+  <nav>
+    <a href="#">Home</a>
+    <a href="#">Knowledge</a>
+    <a href="#">About</a>
+    <a href="#">Contact</a>
+  </nav>
+</header>
+
+<section class="hero">
+  <h2>Preserving Ancient Indian Wisdom</h2>
+  <p>Ayurveda • Yoga • Vedic Science • Sacred Knowledge</p>
+</section>
+
+<section class="features">
+
+  <div class="feature-card">
+    <div class="img-box">
+      <img src="./img/ayuved1.jpg" alt="Ayurveda">
+    </div>
+    <h3>Ayurveda</h3>
+    <p>Ancient science of holistic health.</p>
+  </div>
+
+  <div class="feature-card">
+    <div class="img-box">
+      <img src="./img/yoga1.jpg" alt="Yoga">
+    </div>
+    <h3>Yoga</h3>
+    <p>Balance body, mind and soul.</p>
+  </div>
+
+  <div class="feature-card">
+    <div class="img-box">
+      <img src="./img/Vedic_Maths1.jpg" alt="Vedic Math">
+    </div>
+    <h3>Vedic Math</h3>
+    <p>Speed calculation techniques.</p>
+  </div>
+
+</section>
+
+
+<section class="about">
+  <h2>About VedaVault</h2>
+  <p>
+    VedaVault brings ancient Indian knowledge into a modern
+    digital platform with simplicity and clarity.
+  </p>
+</section>
+
+<section class="big-section">
+  <div class="big-card">
+    <img src="img/ayurved_knowledge.webp">
+    <div>
+      <h3>Ayurveda Knowledge</h3>
+      <p>Natural remedies and lifestyle wisdom.</p>
+    </div>
+  </div>
+
+  <div class="big-card">
+    <img src="img/yoga_meditattion.jpg">
+    <div>
+      <h3>Yoga & Meditation</h3>
+      <p>Discover peace through ancient practices.</p>
+    </div>
+  </div>
+
+  <!-- CHATBOT FLOATING WIDGET -->
+<div id="chatbot-container">
+  <div id="chat-header">VedaVault Chat</div>
+  <div id="chat-body">
+    <div id="chat-box"></div>
+    <form id="chat-form">
+      <input type="text" id="chat-input" placeholder="Type your message..." autocomplete="off" />
+      <button type="submit">Send</button>
+    </form>
+  </div>
+</div>
+
+</section>
+
+
+
+
+
+
+
+<!-- FEEDBACK SECTION -->
+<section class="feedback-section">
+  <h2>User Feedback</h2>
+  <p>Share your experience of learning Ayurvedic lifestyle</p>
+
+  <form class="feedback-form">
+    <input type="text" placeholder="Your Name" required>
+    <input type="email" placeholder="Your Email" required>
+
+    <select required>
+      <option value="">Your Experience</option>
+      <option>Excellent</option>
+      <option>Good</option>
+      <option>Average</option>
+      <option>Needs Improvement</option>
+    </select>
+
+    <textarea rows="4" placeholder="Your Feedback"></textarea>
+
+    <button type="submit">Submit Feedback</button>
+  </form>
+</section>
+
+
+<footer>
+  <h3>VedaVault</h3>
+  <p>Preserving wisdom for future generations</p>
+  <p>© 2026 VedaVault</p>
+</footer>
+
+<script src="chatbot.js"></script>
+
+
+
+
+</body>
+</html>

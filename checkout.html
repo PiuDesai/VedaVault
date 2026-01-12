@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Checkout | VedaVault</title>
+
+<style>
+*{margin:0;padding:0;box-sizing:border-box;}
+body{
+  font-family:Arial;
+  background:antiquewhite;
+  padding-top:90px;
+}
+
+/* Header */
+header{
+  position:fixed;top:0;width:100%;
+  padding:15px 40px;
+  background:#fff;
+}
+header h2{color:#d97706;}
+
+/* Checkout */
+.pay-box{
+  max-width:500px;
+  margin:60px auto;
+  background:#fff;
+  padding:30px;
+  border-radius:20px;
+  box-shadow:0 10px 25px rgba(0,0,0,0.15);
+  text-align:center;
+}
+.item{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  margin-bottom:10px;
+  border-bottom:1px solid #ddd;
+  padding-bottom:8px;
+}
+.item img{
+  width:50px;
+  height:50px;
+  object-fit:cover;
+  border-radius:10px;
+}
+.item-details{
+  flex:1;
+  margin-left:10px;
+}
+.item-details h4{margin:0;color:#d97706;}
+.item-details p{margin:0;}
+button{
+  background:#d97706;
+  color:#fff;
+  border:none;
+  padding:12px 20px;
+  border-radius:12px;
+  cursor:pointer;
+  margin-top:20px;
+}
+button:hover{background:#b45309;}
+</style>
+</head>
+
+<body>
+
+<header>
+  <h2>VedaVault</h2>
+</header>
+
+<div class="pay-box">
+  <h3>Secure Payment</h3>
+  <div id="checkout-items"></div>
+  <p id="checkout-total"></p>
+  <button id="pay">Pay Now</button>
+</div>
+
+<script>
+let cart = JSON.parse(localStorage.getItem("cart")) || [];
+
+function displayCheckout() {
+  const container = document.getElementById("checkout-items");
+  container.innerHTML = "";
+  let total = 0;
+  cart.forEach(item => {
+    total += item.price;
+    const div = document.createElement("div");
+    div.classList.add("item");
+    div.innerHTML = `
+      <img src="${item.img}" alt="${item.name}">
+      <div class="item-details">
+        <h4>${item.name}</h4>
+        <p>₹${item.price}</p>
+      </div>
+    `;
+    container.appendChild(div);
+  });
+  document.getElementById("checkout-total").textContent = "Total: ₹" + total;
+}
+
+displayCheckout();
+
+document.getElementById("pay").addEventListener("click", () => {
+  if(cart.length===0){
+    alert("Your cart is empty!");
+    return;
+  }
+
+  alert("Payment Successful! ✅");
+
+  let orders = JSON.parse(localStorage.getItem("orders")) || [];
+  orders.push({id:Date.now(), items: cart, total: cart.reduce((a,b)=>a+b.price,0)});
+  localStorage.setItem("orders", JSON.stringify(orders));
+
+  localStorage.removeItem("cart");
+  window.location.href = "products.html";
+});
+</script>
+
+</body>
+</html>

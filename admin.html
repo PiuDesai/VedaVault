@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Admin | VedaVault</title>
+<style>
+body{font-family:Arial;background:#fffbeb;padding:30px}
+.box{max-width:900px;margin:auto;background:#fff;padding:20px;border-radius:15px}
+button{background:#d97706;color:#fff;border:none;padding:8px 15px;border-radius:8px;cursor:pointer;margin:5px}
+input{padding:8px;width:100%;margin:5px 0}
+.section{margin-top:30px}
+.card{background:#fff7ed;padding:10px;margin:10px 0;border-radius:10px;display:flex;justify-content:space-between;align-items:center}
+.card div{flex:1;margin-right:10px}
+.card img{width:80px;height:80px;object-fit:cover;border-radius:10px}
+</style>
+</head>
+<body>
+
+<div class="box" id="loginBox">
+  <h2>Admin Login</h2>
+  <input id="email" placeholder="Email">
+  <input id="password" type="password" placeholder="Password">
+  <button onclick="login()">Login</button>
+</div>
+
+<div class="box" id="dashboard" style="display:none">
+  <h2>Admin Dashboard</h2>
+
+  <div class="section">
+    <h3>Add / Update Product</h3>
+    <input id="pname" placeholder="Name">
+    <input id="pprice" placeholder="Price">
+    <input id="pdesc" placeholder="Description">
+    <input type="file" id="pimgFile" accept=".jpg,.jpeg">
+    <input type="hidden" id="pid">
+    <button onclick="addProduct()">Add</button>
+    <button onclick="updateProduct()">Update</button>
+  </div>
+
+  <div class="section">
+    <h3>Products</h3>
+    <div id="products"></div>
+  </div>
+
+  <div class="section">
+    <h3>Orders</h3>
+    <div id="orders"></div>
+  </div>
+
+  <div class="section">
+    <h3>Feedback</h3>
+    <div id="feedback"></div>
+  </div>
+</div>
+
+<script>
+// ---------------- ADMIN LOGIN ----------------
+async function login(){
+  const res = await fetch("/admin/login",{
+    method:"POST",
+    headers:{"Content-Type":"application/json"},
+    body:JSON.stringify({email:email.value,password:password.value})
+  });
+  if(!res.ok){ alert("Invalid admin"); return }
+  loginBox.style.display="none";
+  dashboard.style.display="block";
+  loadAll();
+}
+
+// ---------------- LOAD DATA ----------------
+async function loadAll(){
+  await load("/admin/products","products",true,true);
+  await load("/admin/orders","orders");
+  await load("/admin/feedback","feedback");
+}
+
+async function load(url,id,del=false,isProd=false){
+  try {
+    const res = await fetch(url);
+    const data = await res.json();
+
+    if (!Array.isArray(data)) {
+      console.log("Data is not array:", data);
+      document.getElementById(id).innerHTML = JSON.stringify(data);
+      return;
+    }
+
+    document.getElementById(id).innerHTML = data.map(d=>`
+      <div class="card">
+        ${isProd ? `<img src="${d.img}" alt="${d.name}">` : ""}
+        <div>${Object.entries(d).map(([k,v])=>`<strong>${k}:</strong> ${v}<br>`).join("")}</div>
+        <div>
+          ${del?`<button onclick="delProd(${d.id})">Delete</button>`:""}
+          ${isProd?`<button onclick="editProd(${d.id},'${d.name}',${d.price},'${d.description}','${d.img}')">Edit</button>`:""}
+        </div>
+      </div>
+    `).join("");
+
+  } catch(err) {
+    console.log("Load error:", err);
+    document.getElementById(id).innerHTML = "Error loading data";
+  }
+}
+
+// ---------------- ADD PRODUCT ----------------
+async function addProduct(){
+  const fileInput = document.getElementById("pimgFile");
+  if (!fileInput.files[0]) { alert("Please select a JPG/JPEG image"); return; }
+
+  const ext = fileInput.files[0].name.split('.').pop().toLowerCase();
+  if(ext !== "jpg" && ext !== "jpeg"){ alert("Only JPG/JPEG allowed"); return; }
+
+  const formData = new FormData();
+  formData.append("name", pname.value);
+  formData.append("price", pprice.value);
+  formData.append("description", pdesc.value);
+  formData.append("img", fileInput.files[0]);
+
+  try {
+    const res = await fetch("/admin/products", { method:"POST", body: formData });
+    const data = await res.json();
+
+    if (!res.ok) { alert("Error: " + (data.error || "Unknown error")); console.log(data); return; }
+
+    alert("Product added successfully!");
+    pname.value = pprice.value = pdesc.value = "";
+    fileInput.value = "";
+    load("/admin/products","products",true,true);
+
+  } catch(err) { alert("Client error: "+err.message); console.log(err); }
+}
+
+// ---------------- EDIT PRODUCT ----------------
+function editProd(id,name,price,desc,img){
+  document.getElementById("pid").value=id;
+  document.getElementById("pname").value=name;
+  document.getElementById("pprice").value=price;
+  document.getElementById("pdesc").value=desc;
+}
+
+// ---------------- UPDATE PRODUCT ----------------
+async function updateProduct(){
+  const id = document.getElementById("pid").value;
+  if(!id){ alert("Select a product first"); return; }
+
+  const formData = new FormData();
+  formData.append("name", pname.value);
+  formData.append("price", pprice.value);
+  formData.append("description", pdesc.value);
+
+  const fileInput = document.getElementById("pimgFile");
+  if(fileInput.files[0]){
+    const ext = fileInput.files[0].name.split('.').pop().toLowerCase();
+    if(ext !== "jpg" && ext !== "jpeg"){ alert("Only JPG/JPEG allowed"); return; }
+    formData.append("img", fileInput.files[0]);
+  }
+
+  try {
+    const res = await fetch("/admin/products/"+id,{method:"PUT",body:formData});
+    const data = await res.json();
+
+    if(!res.ok){ alert("Error: " + (data.error || "Unknown error")); console.log(data); return; }
+
+    alert("Product updated successfully!");
+    pname.value = pprice.value = pdesc.value = "";
+    fileInput.value = "";
+    document.getElementById("pid").value="";
+    load("/admin/products","products",true,true);
+
+  } catch(err){ alert("Client error: "+err.message); console.log(err); }
+}
+
+// ---------------- DELETE PRODUCT ----------------
+async function delProd(id){
+  if(!confirm("Are you sure to delete?")) return;
+  try {
+    const res = await fetch("/admin/products/"+id,{method:"DELETE"});
+    const data = await res.json();
+    if(!res.ok){ alert("Error: " + (data.error || "Unknown error")); return; }
+    load("/admin/products","products",true,true);
+  } catch(err){ console.log(err); }
+}
+</script>
+
+</body>
+</html>

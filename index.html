@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>VedaVault</title>
+
+
+
+<!-- Ancient/Calligraphy font -->
+<link href="https://fonts.googleapis.com/css2?family=MedievalSharp&display=swap" rel="stylesheet">
+
+<style>
+/* General */
+body {
+  margin:0;
+  font-family: 'Roboto', sans-serif;
+  background:#fff8f0;
+  overflow: hidden; /* prevent scroll during splash */
+}
+
+/* Splash Screen */
+#splash {
+  position: fixed;
+  top:0;
+  left:0;
+  width:100%;
+  height:100%;
+  background: linear-gradient(to right top,rgb(107, 147, 239),rgb(220, 141, 62),rgb(188, 158, 235),rgb(239, 205, 104));
+  display:flex;
+  flex-direction: column;
+  justify-content:center;
+  align-items:center;
+  z-index: 9999;
+  overflow: hidden;
+}
+
+/* Background zoom animation */
+#splash::before {
+  content: '';
+  position: absolute;
+  top:0; left:0; width:100%; height:100%;
+  background: inherit;
+  z-index: -1;
+  animation: zoomBg 3s forwards;
+}
+@keyframes zoomBg {
+  0% { transform: scale(1); }
+  100% { transform: scale(1.2); }
+}
+
+/* Splash logo */
+.splash-logo {
+  width: 200px;
+  height: 200px;
+  transition: all 1s ease-in-out;
+  opacity: 0;
+  transform: scale(0.5);
+  animation: logoFade 1s forwards;
+  border-radius: 0;
+  z-index: 2;
+  object-fit: cover;
+}
+
+/* Tagline text */
+.splash-text {
+  font-size: 1.5rem;
+  font-weight: 500;
+  color: #fff;
+  margin-top: 20px;
+  opacity: 1;
+  transition: all 1s ease-in-out;
+  text-align: center;
+  max-width: 80%;
+}
+
+/* Logo fade-in */
+@keyframes logoFade {
+  0% { opacity:0; transform: scale(0.5);}
+  50% { opacity:1; transform: scale(1);}
+  100% { opacity:1; transform: scale(1);}
+}
+
+/* Move logo to top-left (header) and make circular */
+.move-top {
+  position: fixed;
+  top: 10px;
+  left: 10px;
+  width: 55px;
+  height: 55px;
+  border-radius: 50%;
+  object-fit: cover;
+  z-index: 200;
+  background: #fff;
+  padding: 3px;
+}
+
+/* Fade out tagline */
+.fade-text {
+  opacity: 0;
+}
+
+/* Header */
+header {
+  position: fixed;
+  top:0;
+  left:0;
+  right:0;
+  height:70px;
+   background: linear-gradient(to left top,rgb(156, 106, 237),rgb(238, 153, 68),rgb(240, 200, 142),rgb(135, 69, 241));
+  display:flex;                /*#b39008;*/
+  color:#fff;
+  display:flex;
+  align-items:center;
+  justify-content: flex-start;
+  padding:0 20px;
+  z-index: 100;
+   margin:20px;
+  border-radius: 30px;
+}
+
+/* Header: icon + text wrapper */
+.header-brand {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+/* Ancient font for text */
+.header-title {
+  font-family: 'MedievalSharp', cursive;
+  font-size: 1.8rem;
+  margin-left: 35px;
+  color: #fff;
+}
+
+/* Navigation */
+nav {
+  margin-left: auto;
+}
+nav a {
+  text-decoration:none;
+  color:#fff;
+  font-weight: bold;
+  margin-left: 20px;
+  transition: color 0.3s;
+}
+nav a:hover { color:#f50b9b; }
+
+/* Iframe */
+iframe {
+  margin-top:70px;
+  width:100%;
+  height:calc(100vh - 70px);
+  border:none;
+  display:none; /* hide initially */
+}
+</style>
+</head>
+<body>
+
+<!-- Splash Screen -->
+<div id="splash">
+  <img src="./img/home_background.jpg" alt="Vedavault Logo" class="splash-logo">
+  <div class="splash-text">“Vedavault – Preserving Ancient Wisdom for the Modern World.”</div>
+</div>
+
+<!-- Header -->
+<header>
+  <div class="header-brand">
+    
+    <div class="header-title">VedaVault</div>
+  </div>
+  <nav>
+    <a onclick="loadPage('home.html')">Home</a>
+    <a onclick="loadPage('ayurveda.html')">Ayurveda</a>
+    <a onclick="loadPage('yoga.html')">Yoga</a>
+    <a onclick="loadPage('ancient_tech.html')">Ancient Tech</a>
+    <a onclick="loadPage('vedic_math.html')">Vedic Math</a>
+    <a onclick="loadPage('product.html')">Products</a>
+    <a onclick="loadPage('profile.html')">Profile</a>
+    <a onclick="loadPage('admin.html')">Admin</a>
+  </nav>
+</header>
+
+<!-- Main content iframe -->
+<iframe id="contentFrame" src="home.html"></iframe>
+
+
+
+
+<script>
+// Load page in iframe
+function loadPage(page) {
+  document.getElementById('contentFrame').src = page;
+}
+
+// Splash screen animation
+window.addEventListener('load', function() {
+  const logo = document.querySelector('.splash-logo');
+  const text = document.querySelector('.splash-text');
+  const headerLogo = document.querySelector('.header-logo');
+
+  // Step 1: Wait 1.5s (logo fade-in)
+  setTimeout(() => {
+    // Step 2: Move logo to top-left and fade out text
+    logo.classList.add('move-top');
+    text.classList.add('fade-text');
+  }, 500);
+
+  // Step 3: After animation, hide splash, show header logo and iframe
+  setTimeout(() => {
+  document.getElementById('splash').style.pointerEvents = 'none';
+  document.getElementById('splash').style.background = 'transparent';
+  document.querySelector('.splash-text').style.display = 'none';
+  document.getElementById('contentFrame').style.display = 'block';
+  document.body.style.overflow = 'auto';
+}, 3000);
+
+});
+
+
+
+</script>
+
+</body>
+</html>
