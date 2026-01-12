@@ -1,0 +1,264 @@
+*{
+  margin:0;
+  padding:0;
+  box-sizing:border-box;
+  font-family: Arial, sans-serif;
+}
+
+body{
+  background: linear-gradient(to right bottom ,rgb(228, 89, 187),rgb(247, 188, 79),rgb(87, 107, 240));
+  background-size: cover;
+  color:#3a2e1f;
+}
+
+/* HERO */
+.hero{
+ 
+  background: url("./img/yoga/hlafbg.jpg");
+  background-size: cover;
+  padding:80px 20px;
+  text-align:center;
+}
+
+.hero h1{
+  font-size:40px;
+  color:white;
+}
+
+.hero p{
+  margin-top:10px;
+  font-size:18px;
+}
+
+/* SECTIONS */
+.section{
+  padding:60px 20px;
+}
+
+.info-card{
+  max-width:900px;
+  margin:auto;
+  background:white;
+  padding:40px;
+  border-radius:20px;
+  box-shadow:0 10px 30px rgba(0,0,0,0.1);
+}
+
+.info-card h2{
+  margin-bottom:10px;
+  color:#92400e;
+}
+
+.info-card p{
+  margin-bottom:20px;
+}
+
+.center{
+  text-align:center;
+}
+
+.info-card img{
+  width:600px;
+  height: auto;
+  margin:20px auto;
+  display:block;
+}
+
+.example-box{
+  background:#fef3c7;
+  padding:15px;
+  border-radius:12px;
+  margin-top:15px;
+}
+
+/* YOGA TYPES */
+.teacher-section{
+  padding:60px 20px;
+  margin-left: 150px;
+}
+
+.teacher-title{
+  text-align:center;
+  font-size:28px;
+  margin-bottom:30px;
+}
+
+.teacher-scroll{
+  display:flex;
+  gap:20px;
+  overflow-x:auto;
+}
+
+.teacher-card{
+  min-width:220px;
+  background:white;
+  padding:20px;
+  border-radius:18px;
+  text-align:center;
+  box-shadow:0 6px 20px rgba(0,0,0,0.12);
+}
+
+.teacher-icon{
+  font-size:60px;
+  color:#059669;
+  margin-bottom:10px;
+}
+
+.pose-cards {
+  display: flex;
+  justify-content: center;
+  gap: 20px;
+  flex-wrap: wrap;
+  margin: 40px auto;
+}
+
+.pose-card {
+  background: #fff8e7;
+  padding: 15px;
+  border-radius: 15px;
+  text-align: center;
+  width: 300px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+  transition: transform 0.3s;
+}
+
+.pose-card:hover {
+  transform: translateY(-5px);
+  
+}
+
+.pose-card img {
+  width: 100%;
+  height: auto;
+  border-radius: 12px;
+  
+}
+
+.pose-card h3 {
+  margin-top: 10px;
+  font-family: Arial, sans-serif;
+  color: #92400e;
+}
+
+/* MEDITATION */
+.quiz-section{
+  padding:60px 20px;
+  background:url("./img/yoga/meditation.webp");
+  background-size: cover;
+}
+
+.quiz-title{
+  text-align:center;
+  font-size:28px;
+  margin-bottom:30px;
+}
+
+.quiz-grid{
+  max-width:400px;
+  margin:auto;
+}
+
+.quiz-card{
+  background:white;
+  padding:30px;
+  border-radius:20px;
+  text-align:center;
+  box-shadow:0 6px 20px rgba(0,0,0,0.1);
+}
+
+.quiz-card button{
+  margin:10px;
+  padding:10px 20px;
+  border:none;
+  background:#059669;
+  color:white;
+  border-radius:20px;
+  cursor:pointer;
+}
+
+.quiz-card .stop{
+  background:#dc2626;
+}
+
+#audioBox{
+  margin-top:15px;
+}
+
+/* PRACTICE */
+.practice{
+  padding:60px 20px;
+}
+
+.practice-card{
+  max-width:700px;
+  margin:auto;
+  background:white;
+  padding:30px;
+  border-radius:20px;
+  text-align:center;
+}
+
+.practice-card ul{
+  list-style:none;
+  margin:20px 0;
+}
+
+.practice-card li{
+  margin:10px 0;
+}
+
+.tip{
+  color:#065f46;
+  font-weight:bold;
+}
+
+.yoga-box{
+  display:none;
+  max-width:900px;
+  margin:40px auto;
+  padding:30px;
+  background:#fff;
+  border-radius:18px;
+  box-shadow:0 4px 20px rgba(0,0,0,0.15);
+}
+
+.yoga-box:target{
+  display:block;
+}
+
+.desc{
+  margin:10px 0 20px;
+}
+
+.yoga-box ul{
+  margin-left:20px;
+}
+
+.pose-grid{
+  display:flex;
+  gap:15px;
+  margin-top:20px;
+}
+
+.pose-grid img{
+  width:180px;
+  border-radius:14px;
+}
+
+/* CLOSE */
+.close{
+  display:inline-block;
+  margin-top:20px;
+  padding:10px 20px;
+  background:#92400e;
+  color:#fff;
+  text-decoration:none;
+  border-radius:20px;
+}
+/* FOOTER */
+footer{
+  background:linear-gradient(to right bottom,rgb(244, 173, 41),rgb(159, 169, 244));
+  color:white;
+  text-align:center;
+  padding:30px;
+}
